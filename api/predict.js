@@ -4,9 +4,7 @@ const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
 
-if (!process.env.REPLICATE_API_TOKEN) {
-    return res.status(500).json({ error: "No API token configured" });
-}
+
 
 export default async function handler(req, res) {
     if (req.method !== "POST") {
@@ -14,7 +12,7 @@ export default async function handler(req, res) {
     }
 
     if (!process.env.REPLICATE_API_TOKEN) {
-        throw new Error("REPLICATE_API_TOKEN no está definido en variables de entorno");
+        return res.status(500).json({ error: "No API token configured" });
     }
 
     const { base64Image, version } = req.body;
