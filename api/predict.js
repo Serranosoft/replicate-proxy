@@ -4,6 +4,10 @@ const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
 
+if (!process.env.REPLICATE_API_TOKEN) {
+    return res.status(500).json({ error: "No API token configured" });
+}
+
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Only POST allowed" });
