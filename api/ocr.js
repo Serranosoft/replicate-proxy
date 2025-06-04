@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     }
 
     // Parsear el formulario
-    const form = new formidable.IncomingForm();
+    const form = formidable();
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
