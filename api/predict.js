@@ -1,5 +1,5 @@
 import Replicate from "replicate";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import { v4 as uuidv4 } from "uuid";
 
 const replicate = new Replicate({
@@ -17,13 +17,17 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "Missing image or model version" });
     }
 
+    let fileName = null;
+
     try {
         // Convert base64 to buffer
         const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
         const buffer = Buffer.from(base64Data, "base64");
 
+        console.log("Tamaño del buffer:", buffer.length, "bytes");
+
         // Upload to Vercel Blob
-        const fileName = `uploads/${uuidv4()}.png`;
+        fileName = `uploads/${uuidv4()}.png`;
         const { url: imageUrl } = await put(fileName, buffer, {
             access: "public",
             token: process.env.BLOB_READ_WRITE_TOKEN,
@@ -36,7 +40,19 @@ export default async function handler(req, res) {
 
         res.status(200).json({ output: prediction });
     } catch (err) {
-        console.error(err);
+        console.error("Error durante la predicción:", err);
         res.status(500).json({ error: err.message || "Prediction error" });
+    } finally {
+        // Intentar eliminar el blob si se subió
+        if (fileName) {
+            try {
+                await del(fileName, {
+                    token: process.env.BLOB_READ_WRITE_TOKEN,
+                });
+                console.log("Archivo eliminado del blob:", fileName);
+            } catch (deleteError) {
+                console.warn("Error al eliminar el archivo del blob:", deleteError.message);
+            }
+        }
     }
 }
