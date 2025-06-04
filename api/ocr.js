@@ -11,10 +11,10 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Only POST allowed" });
     }
 
-    const { base64Image, version } = req.body;
+    const { base64Image } = req.body;
 
-    if (!base64Image || !version) {
-        return res.status(400).json({ error: "Missing image or model version" });
+    if (!base64Image) {
+        return res.status(400).json({ error: "Missing image" });
     }
 
     let fileName = null;
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         });
 
         // Run prediction with the image URL
-        const prediction = await replicate.run(version, {
+        const prediction = await replicate.run("abiruyt/text-extract-ocr:a524caeaa23495bc9edc805ab08ab5fe943afd3febed884a4f3747aa32e9cd61", {
             input: { image: imageUrl },
         });
 
