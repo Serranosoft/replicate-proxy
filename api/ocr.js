@@ -62,7 +62,7 @@ export default async function handler(req, res) {
             console.error("Error durante la predicción:", err);
             res.status(500).json({ error: err.message || "Prediction error" });
         } finally {
-            if (fileName) {
+            /* if (fileName) {
                 try {
                     await del(fileName, {
                         token: process.env.BLOB_READ_WRITE_TOKEN,
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
                 } catch (deleteError) {
                     console.warn("Error al eliminar el archivo del blob:", deleteError.message);
                 }
-            }
+            } */
         }
     });
 }
