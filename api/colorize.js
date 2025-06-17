@@ -51,7 +51,7 @@ export default async function handler(req, res) {
 
             // Ejecutar OCR
             const prediction = await replicate.run(
-                "abiruyt/text-extract-ocr:a524caeaa23495bc9edc805ab08ab5fe943afd3febed884a4f3747aa32e9cd61",
+                "piddnad/ddcolor:ca494ba129e44e45f661d6ece83c4c98a9a7c774309beca01429b58fce8aa695",
                 {
                     input: { image: imageUrl },
                 }
