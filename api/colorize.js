@@ -57,6 +57,9 @@ export default async function handler(req, res) {
                 }
             );
 
+            console.log("Resultado: ", prediction);
+
+
             res.status(200).json({ output: prediction });
         } catch (err) {
             console.error("Error durante la predicción:", err);
