@@ -58,10 +58,11 @@ export default async function handler(req, res) {
             );
 
             console.log("Resultado: ", output);
+            console.log(output.url());
             console.log("Resultado: ", res.json(output));
 
-
-            res.status(200).json({ output });
+            const test = await output.url();
+            res.status(200).json({ test });
         } catch (err) {
             console.error("Error durante la predicción:", err);
             res.status(500).json({ error: err.message || "Prediction error" });
