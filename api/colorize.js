@@ -49,18 +49,19 @@ export default async function handler(req, res) {
                 token: process.env.BLOB_READ_WRITE_TOKEN,
             });
 
-            // Ejecutar OCR
-            const prediction = await replicate.run(
+            // Ejecutar COLORIZE
+            const output = await replicate.run(
                 "piddnad/ddcolor:ca494ba129e44e45f661d6ece83c4c98a9a7c774309beca01429b58fce8aa695",
                 {
                     input: { image: imageUrl },
                 }
             );
 
-            console.log("Resultado: ", prediction);
+            console.log("Resultado: ", output);
+            console.log("Resultado: ", res.json(output));
 
 
-            res.status(200).json({ output: prediction });
+            res.status(200).json({ output });
         } catch (err) {
             console.error("Error durante la predicción:", err);
             res.status(500).json({ error: err.message || "Prediction error" });
