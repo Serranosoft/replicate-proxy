@@ -50,15 +50,29 @@ export default async function handler(req, res) {
             });
 
             // Ejecutar COLORIZE
-            const output = await replicate.predictions.create({
+            const prediction = await replicate.predictions.create({
                 version: "ca494ba129e44e45f661d6ece83c4c98a9a7c774309beca01429b58fce8aa695",
                 input: { image: imageUrl },
             });
 
-            console.log("Resultado: ", output);
 
+            let result = prediction;
+            while (
+                result.status !== "succeeded" &&
+                result.status !== "failed" &&
+                result.status !== "canceled"
+            ) {
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                result = await replicate.predictions.get(result.id);
+            }
 
-            res.status(200).json({ output });
+            if (result.status === "succeeded") {
+                console.log("Resultado recibido:", result.output);
+                res.status(200).json({ output: result.output });
+            } else {
+                console.error("Error en la predicción:", result.error);
+                res.status(500).json({ error: result.error || "Prediction failed" });
+            }
         } catch (err) {
             console.error("Error durante la predicción:", err);
             res.status(500).json({ error: err.message || "Prediction error" });
