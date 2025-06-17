@@ -50,19 +50,15 @@ export default async function handler(req, res) {
             });
 
             // Ejecutar COLORIZE
-            const output = await replicate.run(
-                "piddnad/ddcolor:ca494ba129e44e45f661d6ece83c4c98a9a7c774309beca01429b58fce8aa695",
-                {
-                    input: { image: imageUrl },
-                }
-            );
+            const output = await replicate.predictions.create({
+                version: "ca494ba129e44e45f661d6ece83c4c98a9a7c774309beca01429b58fce8aa695",
+                input: { image: imageUrl },
+            });
 
             console.log("Resultado: ", output);
-            console.log(output.url());
-            console.log("Resultado: ", res.json(output));
 
-            const test = await output.url();
-            res.status(200).json({ test });
+
+            res.status(200).json({ output });
         } catch (err) {
             console.error("Error durante la predicción:", err);
             res.status(500).json({ error: err.message || "Prediction error" });
